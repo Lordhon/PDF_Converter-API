@@ -1,0 +1,33 @@
+services:
+
+  web:
+    build:
+      context: ./pdf_converter
+    container_name: converter
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_SETTINGS_MODULE: pdf_converter.settings
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DB: converterPDF
+
+  db:
+    image: mysql:9
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: converterPDF
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
