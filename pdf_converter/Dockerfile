@@ -6,7 +6,7 @@ RUN apt-get update && \
     libmariadb-dev \
     libmariadb-dev-compat \
     pkg-config \
-    fonts-dejavu \
+    fonts-hack \
     fontconfig && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

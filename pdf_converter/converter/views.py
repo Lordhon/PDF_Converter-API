@@ -40,23 +40,27 @@ class TxtToPdfConverter(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def convert_txt_to_pdf(self, txt_file, pdf_file_path):
-        # Чтение
+        # Чтение текста
         text_content = txt_file.read().decode('utf-8')
 
-        #  путь к шрифту
-        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"  # Путь к шрифту
+        # Путь к шрифту Hack
+        font_path = "/usr/share/fonts/truetype/hack/Hack-Regular.ttf"
+
+        # Проверка наличия шрифта
+        if not os.path.exists(font_path):
+            raise FileNotFoundError(f"Font not found at {font_path}")
 
         # Регистрация шрифта
-        pdfmetrics.registerFont(TTFont('DejaVuSans', font_path))
+        pdfmetrics.registerFont(TTFont('Hack', font_path))
 
         # Создание PDF файла
         c = canvas.Canvas(pdf_file_path, pagesize=letter)
         width, height = letter
 
         # Установка шрифта
-        c.setFont("DejaVuSans", 10)
+        c.setFont("Hack", 10)
 
-        # НАСТРОЙКА ТЕКСТА
+        # Настройка текста
         y_position = height - 40
 
         # Добавка текста в PDF
@@ -64,9 +68,10 @@ class TxtToPdfConverter(APIView):
             c.drawString(30, y_position, line)
             y_position -= 12  # Переход на новую строку
 
-            # new page
+            # Новая страница
             if y_position < 40:
                 c.showPage()
+                c.setFont("Hack", 10)
                 y_position = height - 40
 
         c.save()
